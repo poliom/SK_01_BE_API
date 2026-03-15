@@ -9,9 +9,8 @@ import static io.restassured.RestAssured.given;
 
 
 public class admin_flow {
-
     @Test
-    public void admin_flow() {
+    public String admin_flow() {
         Map<String, String> headers = Map.of(
                 "Content-Type", "application/json",
                 "accept", "application/json"
@@ -29,9 +28,12 @@ public class admin_flow {
                         headers,
                         body);
 
-        System.out.println("Admin Flow Test:");
-        System.out.println("Status Code: " + response.getStatusCode());
-        System.out.println("Response: " + response.asString());
+        RestUtils.responseRestAssureValidation(response, 200);
+
+        //System.out.println("Admin Flow Test:");
+        //System.out.println("Status Code: " + response.getStatusCode());
+        //System.out.println("Response: " + response.asString());
+        return response.jsonPath().getString("access_token");
     }
 
     @Test
@@ -63,7 +65,7 @@ public class admin_flow {
         Map<String, String> headers = Map.of(
                 "Content-Type", "application/json",
                 "accept", "application/json",
-                "Authorization","Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMSIsImVtYWlsIjoiYWRtaW5AdGVzdC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NzM1NzM2ODgsImV4cCI6MTc3MzU3NDU4OH0.vf5h-XNF0KRNO0kvdASAHN1bU1QQVPwE2ylO7Wd5z68"
+                "Authorization","Bearer " + admin_flow()
         );
         String body = "{\n" +
                 "  \"name\": \"Mechanical Keyboard X\",\n" +
@@ -80,6 +82,7 @@ public class admin_flow {
                         headers,
                         body);
 
+        RestUtils.responseRestAssureValidation(response, 200);
         System.out.println("Admin Flow Test:");
         System.out.println("Status Code: " + response.getStatusCode());
         System.out.println("Response: " + response.asString());
