@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" packages="utils">
+
+    <Appenders>
+
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <File name="FileAppender"
+              fileName="src/test/resources/logs/test_${date:yyyyMMdd_HHmmss}.log"
+              append="false">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+
+        <!-- Pipes every log entry into the active ExtentTest node in the HTML report -->
+        <ExtentTestAppender name="ExtentAppender"/>
+
+    </Appenders>
+
+    <Loggers>
+
+        <!-- Request / response info -->
+        <Logger name="requests" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ExtentAppender"/>
+        </Logger>
+
+        <!-- Full response body -->
+        <Logger name="responses" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ExtentAppender"/>
+        </Logger>
+
+        <!-- Test failures -->
+        <Logger name="failures" level="ERROR" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ExtentAppender"/>
+        </Logger>
+
+        <Root level="DEBUG">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="ExtentAppender"/>
+        </Root>
+
+    </Loggers>
+
+</Configuration>

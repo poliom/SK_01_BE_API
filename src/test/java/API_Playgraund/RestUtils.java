@@ -1,12 +1,19 @@
 package API_Playgraund;
 
 import io.restassured.response.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import utils.FileUtils;
 
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
 public class RestUtils {
+
+    private static final Logger requestLog = LogManager.getLogger("requests");
+    private static final Logger responseLog = LogManager.getLogger("responses");
+
     public static void responseRestAssureValidation(Response response, int statuscode) {
         switch (statuscode) {
             case 200:
@@ -31,31 +38,53 @@ public class RestUtils {
                 throw new IllegalArgumentException("Unsupported status code: " + statuscode);
         }
     }
+
     public static Response responseRestAssure(String baseURL, String endpoint, String Method, Map<String, String> headers, String body) {
+        requestLog.info(">>> {} {}{}", Method.toUpperCase(), baseURL, endpoint);
+        requestLog.info("Request body: {}", body);
+
+        long start = System.currentTimeMillis();
+        Response response;
+
         switch (Method.toUpperCase()) {
             case "GET":
-                return given()
+                response = given()
                         .baseUri(baseURL)
                         .headers(headers)
                         .when()
                         .body(body)
                         .get(endpoint);
+                break;
             case "POST":
-                return given()
+                response = given()
                         .baseUri(baseURL)
                         .headers(headers)
                         .when()
                         .body(body)
                         .post(endpoint);
+                break;
             case "PUT":
-                return given()
+                response = given()
                         .baseUri(baseURL)
                         .headers(headers)
                         .when()
                         .body(body)
                         .put(endpoint);
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported HTTP method: " + Method);
         }
+
+        long elapsed = System.currentTimeMillis() - start;
+        requestLog.info("<<< Status: {} | Time: {}ms", response.getStatusCode(), elapsed);
+        responseLog.debug("Response body: {}", response.asString());
+
+        return response;
+    }
+
+    public static Response responseRestAssureFromFile(String baseURL, String endpoint, String method, Map<String, String> headers, String filePath) {
+        requestLog.info("Loading request body from file: {}", filePath);
+        String body = FileUtils.readFileAsString(filePath);
+        return responseRestAssure(baseURL, endpoint, method, headers, body);
     }
 }

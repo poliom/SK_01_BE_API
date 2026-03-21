@@ -36,3 +36,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Generated test output ###
+src/test/resources/logs/
+src/test/resources/test-output/
+src/test/resources/responses/

@@ -1,0 +1,27 @@
+[
+  {
+    "username": "alice_smith",
+    "email": "alice_smith@test.com",
+    "password": "Alice123!"
+  },
+  {
+    "username": "bob_jones",
+    "email": "bob_jones@test.com",
+    "password": "Bob123!"
+  },
+  {
+    "username": "carol_white",
+    "email": "carol_white@test.com",
+    "password": "Carol123!"
+  },
+  {
+    "username": "dave_brown",
+    "email": "dave_brown@test.com",
+    "password": "Dave123!"
+  },
+  {
+    "username": "eve_davis",
+    "email": "eve_davis@test.com",
+    "password": "Eve123!"
+  }
+]
