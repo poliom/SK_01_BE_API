@@ -37,6 +37,9 @@ build/
 ### Mac OS ###
 .DS_Store
 
+### DB credentials ###
+src/test/resources/db.properties
+
 ### Generated test output ###
 src/test/resources/logs/
 src/test/resources/test-output/

@@ -1,5 +1,30 @@
 [
   {
+    "username": "bai_mile",
+    "email": "bai_mile@test.com",
+    "password": "Bai123!"
+  },
+  {
+    "username": "Nane_Vute",
+    "email": "Nane_Vute@test.com",
+    "password": "Nane123!"
+  },
+  {
+    "username": "Hitar_Petar",
+    "email": "Hitar_Petar@test.com",
+    "password": "Hitar123!"
+  },
+  {
+    "username": "bai_jeko",
+    "email": "bai_jeko@test.com",
+    "password": "Bai_jeko123!"
+  },
+  {
+    "username": "marika_ivanchova",
+    "email": "marika_ivanchova@test.com",
+    "password": "Marika123!"
+  },
+  {
     "username": "alice_smith",
     "email": "alice_smith@test.com",
     "password": "Alice123!"

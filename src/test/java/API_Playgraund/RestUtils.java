@@ -34,6 +34,9 @@ public class RestUtils {
             case 404:
                 response.then().statusCode(404);
                 break;
+            case 409:
+                response.then().statusCode(409);
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported status code: " + statuscode);
         }

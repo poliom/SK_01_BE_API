@@ -7,19 +7,9 @@
         <listener class-name="utils.TestListener"/>
     </listeners>
 
-    <test name="API Playground Tests">
+    <test name="BDD Cucumber Tests">
         <classes>
-            <class name="API_Playgraund.admin_flow"/>
-            <class name="API_Playgraund.user_flow"/>
-            <class name="API_Playgraund.anon_flow"/>
-        </classes>
-    </test>
-
-    <test name="Automation Exercise Tests">
-        <classes>
-            <class name="Automation_Exercise.automationexerciseTest"/>
-            <class name="Automation_Exercise.get_product_list"/>
-            <class name="Automation_Exercise.post_search"/>
+            <class name="runners.CucumberRunner"/>
         </classes>
     </test>
 
