@@ -30,6 +30,13 @@ jobs:
       - name: Run tests with Maven
         run: mvn clean test
 
+      - name: Publish Surefire test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: target/surefire-reports/
+
       - name: Upload Extent Report
         if: always()
         uses: actions/upload-artifact@v4
