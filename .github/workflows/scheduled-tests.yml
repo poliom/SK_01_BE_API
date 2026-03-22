@@ -1,13 +1,14 @@
-name: Java CI with Maven
+name: Scheduled API Tests
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  schedule:
+    # Runs every 2 minutes
+    - cron: '*/2 * * * *'
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
 
 jobs:
-  build:
+  scheduled-run:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,19 +35,19 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-artifacts
+          name: test-artifacts-${{ github.run_id }}
           path: src/test/resources/test-artifacts/
 
       - name: Upload Cucumber report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cucumber-report
+          name: cucumber-report-${{ github.run_id }}
           path: target/cucumber-reports/
 
       - name: Upload Surefire results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: surefire-reports
+          name: surefire-reports-${{ github.run_id }}
           path: target/surefire-reports/

@@ -12,6 +12,8 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Timestamp format used to name the per-run artifact folder. -->
+        <maven.build.timestamp.format>yyyyMMdd_HHmmss</maven.build.timestamp.format>
     </properties>
     <dependencies>
         <dependency>
@@ -82,6 +84,9 @@
                         <suiteXmlFile>testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <!-- Pass the run directory to the JVM so log4j2 and RunContext
+                         use the exact same folder for all test artifacts. -->
+                    <argLine>-Drun.dir=src/test/resources/test-artifacts/run_${maven.build.timestamp}</argLine>
                 </configuration>
             </plugin>
         </plugins>

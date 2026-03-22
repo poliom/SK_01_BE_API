@@ -1,17 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" packages="utils">
 
+    <Properties>
+        <!-- Resolved from the system property set by Maven Surefire (pom.xml argLine).
+             Falls back to a literal placeholder when the property is absent (IDE runs). -->
+        <Property name="runDir">${sys:run.dir:-target/test-artifacts/run_fallback}</Property>
+        <Property name="logPattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+    </Properties>
+
     <Appenders>
 
         <Console name="ConsoleAppender" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <File name="FileAppender"
-              fileName="src/test/resources/logs/test_${date:yyyyMMdd_HHmmss}.log"
+        <!-- Captures every log line for the entire run in one file. -->
+        <File name="SuiteFileAppender"
+              fileName="${runDir}/logs/suite.log"
               append="false">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="${logPattern}"/>
         </File>
+
+        <!--
+            Per-scenario log files.
+            TestListener sets ThreadContext key "testLogFile" = sanitised scenario name + timestamp
+            before each scenario and removes it afterwards.
+
+            Routing behaviour:
+              - key is set    → default route → creates {runDir}/logs/{key}.log
+              - key is absent → ${ctx:testLogFile} stays as the literal string
+                                → matched by the explicit key="$${ctx:testLogFile}" route
+                                → NullAppender (suite.log already captured it)
+        -->
+        <Routing name="RoutingAppender">
+            <Routes pattern="$${ctx:testLogFile}">
+
+                <!-- Per-test file (default route – fires when key holds an actual value) -->
+                <Route>
+                    <File name="Test-${ctx:testLogFile}"
+                          fileName="${runDir}/logs/${ctx:testLogFile}.log"
+                          append="false">
+                        <PatternLayout pattern="${logPattern}"/>
+                    </File>
+                </Route>
+
+                <!-- Discard route – fires when testLogFile is not in ThreadContext -->
+                <Route key="$${ctx:testLogFile}">
+                    <Null name="NullRoute"/>
+                </Route>
+
+            </Routes>
+        </Routing>
 
         <!-- Pipes every log entry into the active ExtentTest node in the HTML report -->
         <ExtentTestAppender name="ExtentAppender"/>
@@ -23,27 +62,31 @@
         <!-- Request / response info -->
         <Logger name="requests" level="INFO" additivity="false">
             <AppenderRef ref="ConsoleAppender"/>
-            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="SuiteFileAppender"/>
+            <AppenderRef ref="RoutingAppender"/>
             <AppenderRef ref="ExtentAppender"/>
         </Logger>
 
         <!-- Full response body -->
         <Logger name="responses" level="DEBUG" additivity="false">
             <AppenderRef ref="ConsoleAppender"/>
-            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="SuiteFileAppender"/>
+            <AppenderRef ref="RoutingAppender"/>
             <AppenderRef ref="ExtentAppender"/>
         </Logger>
 
         <!-- Test failures -->
         <Logger name="failures" level="ERROR" additivity="false">
             <AppenderRef ref="ConsoleAppender"/>
-            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="SuiteFileAppender"/>
+            <AppenderRef ref="RoutingAppender"/>
             <AppenderRef ref="ExtentAppender"/>
         </Logger>
 
         <Root level="DEBUG">
             <AppenderRef ref="ConsoleAppender"/>
-            <AppenderRef ref="FileAppender"/>
+            <AppenderRef ref="SuiteFileAppender"/>
+            <AppenderRef ref="RoutingAppender"/>
             <AppenderRef ref="ExtentAppender"/>
         </Root>
 
