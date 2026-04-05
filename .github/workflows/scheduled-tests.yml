@@ -1,9 +1,9 @@
 name: Scheduled API Tests
 
 on:
-  schedule:
+  #schedule:
     # Runs every 2 minutes
-    - cron: '*/2 * * * *'
+    #- cron: '*/2 * * * *'
   # Allow manual trigger from the Actions tab
   workflow_dispatch:
 
